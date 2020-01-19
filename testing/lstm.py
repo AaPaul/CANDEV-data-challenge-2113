@@ -74,7 +74,7 @@ print("label_shape:",np.shape(label))
 train_texts = documents['combine']
 train_labels = label
 
-max_length_list = [70]
+max_length_list = [200]
 # max_length = 100
 #try 20000
 max_words = 10000
@@ -125,11 +125,11 @@ training_times = 200
 #should be larger
       
 # different state dimension 20,50,100,200,500
-units_dic = {0:70}
+units_dic = {0:200}
 max_length = 350
 train_data = pad_sequences(sequences,maxlen=max_length)
 train_labels = np.array(train_labels)
-X_train, X_val, y_train, y_val = train_test_split(train_data,train_labels,test_size=0.2,random_state=50)
+# X_train, X_val, y_train, y_val = train_test_split(train_data,train_labels,test_size=0,random_state=50)
 model = []
 history = []
 for num in range(1):
@@ -143,4 +143,5 @@ for num in range(1):
   model[num].layers[0].set_weights([embedding_matrix])
   model[num].layers[0].trainable = False
   model[num].compile(optimizer='Adam',loss='mean_squared_error',metrics=['acc'])
-  history.append(model[num].fit(X_train,y_train,epochs=training_times,batch_size=32,validation_data=(X_val,y_val)))
+  history.append(model[num].fit(train_data,train_labels,epochs=training_times,batch_size=32))
+  model[num].save("lstm.h5")
